@@ -1,20 +1,27 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { StudentService } from 'src/student/student.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(private studentService: StudentService) {}
+    constructor(private studentService: StudentService, private jwtService: JwtService) {}
 
     public async login(username: string, password: number): Promise<any> {
         const user = await this.studentService.findOneForLogin(username);
         if(user?.phoneNumber !== password) {
             throw new UnauthorizedException();
         }
-        if(user.RoleId==='665b569458c70fe9f7be72d3') {
-            return { userRoleId : user?.roleId, userName: user?.name }
-        }
-        return {userRoleId :user?.roleId, userRollNo: user?.rollno, userName: user?.name};
+        let jwt: string = await this.jwtService.signAsync({ userRoleId: user?.roleId, userRollNo: user?.rollno, userName: user?.name });
+        return { jwt, user };
     }
 
+    public async verifyToken(token: string) {
+        try {
+          const user = this.jwtService.verify(token);
+          return user;
+        } catch (error) {
+          throw new UnauthorizedException('Invalid token');
+        }
+    }
 }
 
