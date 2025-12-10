@@ -19,11 +19,14 @@ export class FileuploadController {
     @Post('addOne')
     @UseInterceptors(FileInterceptor('file', {
         storage:  diskStorage({
-            destination: './upload',
+            destination: process.env.UPLOAD_DIRECTORY || './upload',
             filename: (req, file, cb) => {
                 cb(null, `${file.originalname}-${Date.now()}`);
             }
-        })
+        }),
+        limits: {
+            fileSize: Number(process.env.MAX_FILE_SIZE) || 10485760 // 10MB default
+        }
     }))
     public async uploadFileandData(
         @UploadedFile() file: Express.Multer.File,
@@ -39,11 +42,14 @@ export class FileuploadController {
     @Post('add')
     @UseInterceptors(FilesInterceptor('files', 100, {
         storage: diskStorage({
-            destination: './upload',
+            destination: process.env.UPLOAD_DIRECTORY || './upload',
             filename: (req, file, cb) => {
                 cb(null, `${file.originalname}-${Date.now()}`);
             }
-        })
+        }),
+        limits: {
+            fileSize: Number(process.env.MAX_FILE_SIZE) || 10485760 // 10MB default
+        }
     }))
     public async uploadFilesAndFormData(
         @UploadedFiles() files: Express.Multer.File[],
@@ -66,7 +72,7 @@ export class FileuploadController {
     @Delete(':id')
     public async deleteFile(@Param('id') id: string, @Query() query: any){
         try {
-            await fs.promises.unlink(`./upload/${query.filename}`);
+            await fs.promises.unlink(`${(process.env.UPLOAD_DIRECTORY) || './upload'}/${query.filename}`);
         } catch (err) {
             console.error(err);
             throw err;
@@ -81,7 +87,7 @@ export class FileuploadController {
         @Res() res: Response
     ): Promise<void> {
         try {
-            const filePath = join(process.cwd(), `./upload/${filename}`);
+            const filePath = join(process.cwd(), `${(process.env.UPLOAD_DIRECTORY) || './upload'}/${filename}`);
             if (!fs.existsSync(filePath)) {
                 throw new NotFoundException('File not found');
             }

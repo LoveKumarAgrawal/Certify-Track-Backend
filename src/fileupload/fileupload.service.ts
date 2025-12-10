@@ -1,7 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FileUploadDto } from './fileupload.dto';
 
 @Injectable()
 export class FileuploadService {
@@ -14,7 +13,7 @@ export class FileuploadService {
     public async getData(): Promise<any[]> {
         const fileData = await this.fileModel.find().exec();
         if (!fileData) {
-            throw new HttpException('sadasdNot found', 404);
+            throw new HttpException('Not found', 404);
         }
         return fileData;
     }

@@ -6,8 +6,8 @@ import { JwtModule } from '@nestjs/jwt/dist';
 
 @Module({
   imports: [StudentModule, JwtModule.register({
-    secret: "loveagrawal",
-    signOptions: {expiresIn: '1d'}
+    secret: `${process.env.JWT_SECRET}`,
+    signOptions: {expiresIn: `${process.env.JWT_EXPIRATION_TIME}`}
   })],
   controllers: [AuthController], 
   providers: [AuthService]
