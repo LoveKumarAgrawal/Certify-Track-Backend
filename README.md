@@ -876,23 +876,6 @@ For support, please raise an issue in the GitHub repository or contact the devel
 
 ---
 
-## 🗺️ Roadmap
-
-### Upcoming Features
-
-- [ ] Role-based access control (RBAC)
-- [ ] Email notifications for certificate approval
-- [ ] Advanced search and filtering
-- [ ] Certificate templates
-- [ ] Bulk operations
-- [ ] Admin dashboard
-- [ ] Analytics and reporting
-- [ ] API documentation with Swagger
-- [ ] Docker containerization
-- [ ] CI/CD pipeline
-
----
-
 <div align="center">
 
 **Made with ❤️ for Educational Institutions**
